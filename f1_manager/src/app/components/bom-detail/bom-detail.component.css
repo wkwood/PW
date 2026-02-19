@@ -1,0 +1,120 @@
+.detail-container {
+    padding: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    color: #e0e0e0;
+}
+
+header {
+    margin-bottom: 2rem;
+}
+
+.back-link {
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    margin-bottom: 1rem;
+}
+
+.back-link:hover {
+    color: #ff3e3e;
+}
+
+h1 {
+    font-size: 1.5rem;
+    color: white;
+}
+
+.editor-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.form-section {
+    background: #1e1e1e;
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    color: #ff3e3e;
+    text-transform: uppercase;
+    border-bottom: 1px solid #333;
+    padding-bottom: 0.5rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.75rem;
+    color: #888;
+    margin-bottom: 0.3rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.6rem;
+    background: #282828;
+    border: 1px solid #444;
+    color: white;
+    border-radius: 4px;
+}
+
+.sub-components-section {
+    background: #1e1e1e;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 0.8rem;
+    text-align: left;
+    border-bottom: 1px solid #333;
+    font-size: 0.9rem;
+}
+
+th {
+    color: #888;
+    font-weight: normal;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.save-btn {
+    padding: 1rem 2rem;
+    background: #ff3e3e;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.save-btn:hover {
+    background: #e63535;
+}
+
+.loading {
+    text-align: center;
+    padding: 5rem;
+    color: #888;
+}

@@ -1,0 +1,51 @@
+<div class="dashboard-container">
+    <header>
+        <h1>F1 BOM Management System</h1>
+        <div class="search-bar">
+            <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()"
+                placeholder="Search components (e.g. Wing, Bolt, Piston)...">
+            <button (click)="onSearch()">Search</button>
+        </div>
+    </header>
+
+    <section class="car-management">
+        <h2>Active F1 Cars</h2>
+        <div class="car-grid">
+            <div *ngFor="let car of cars" class="car-card">
+                <h3>{{ car.modelName }} (#{{ car.carNumber }})</h3>
+                <p><strong>Driver:</strong> {{ car.driver || 'N/A' }}</p>
+                <button [routerLink]="['/asset', car.chassisAssetId]">View Live BOM</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="design-blueprints">
+        <h2>Design Blueprints (Components)</h2>
+        <div class="component-list">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Part Number</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Category</th>
+                        <th>Serial Number</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let comp of components">
+                        <td>{{ comp.partNumber }}</td>
+                        <td>{{ comp.name }}</td>
+                        <td><span class="badge" [ngClass]="comp.type.toLowerCase()">{{ comp.type }}</span></td>
+                        <td>{{ comp.category }}</td>
+                        <td>{{ comp.serialNumber || 'N/A' }}</td>
+                        <td>
+                            <button [routerLink]="['/component', comp._id]">Edit Blueprint</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

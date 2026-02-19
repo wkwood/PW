@@ -1,0 +1,73 @@
+<div class="detail-container" *ngIf="component; else loadingTpl">
+    <header>
+        <button class="back-link" [routerLink]="['/']">← Back to Dashboard</button>
+        <h1>Edit Blueprint: {{ component.name }}</h1>
+    </header>
+
+    <div class="editor-grid">
+        <!-- Main Info Section -->
+        <section class="form-section">
+            <h3>General Information</h3>
+            <div class="form-group">
+                <label>Part Number</label>
+                <input type="text" [(ngModel)]="component.partNumber">
+            </div>
+            <div class="form-group">
+                <label>Component Name</label>
+                <input type="text" [(ngModel)]="component.name">
+            </div>
+            <div class="form-group">
+                <label>Design Version</label>
+                <input type="text" [(ngModel)]="component.version">
+            </div>
+            <div class="form-group">
+                <label>Blueprint Serial (Optional)</label>
+                <input type="text" [(ngModel)]="component.serialNumber">
+            </div>
+        </section>
+
+        <!-- Specs Section -->
+        <section class="form-section" *ngIf="component.specifications">
+            <h3>Design Specifications</h3>
+            <div class="form-group">
+                <label>Material</label>
+                <input type="text" [(ngModel)]="component.specifications.material">
+            </div>
+            <div class="form-group">
+                <label>Weight (g)</label>
+                <input type="number" [(ngModel)]="component.specifications.weight_g">
+            </div>
+        </section>
+    </div>
+
+    <!-- Sub-components Table -->
+    <section class="sub-components-section" *ngIf="component.subComponents && component.subComponents.length > 0">
+        <h3>Sub-Components / Bill of Materials</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Part #</th>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Required Serial</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let sub of component.subComponents">
+                    <td>{{ $any(sub.componentId).partNumber }}</td>
+                    <td>{{ $any(sub.componentId).name }}</td>
+                    <td>{{ sub.quantity }}</td>
+                    <td>{{ sub.serialNumber || 'Any' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <div class="actions">
+        <button class="save-btn" (click)='onSave()'>Save Blueprint Changes</button>
+    </div>
+</div>
+
+<ng-template #loadingTpl>
+    <div class="loading">Loading component blueprints...</div>
+</ng-template>
