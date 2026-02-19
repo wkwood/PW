@@ -28,7 +28,13 @@ export class BomDashboardComponent implements OnInit {
     }
 
     loadCars(): void {
-        this.bomService.getCars().subscribe(cars => this.cars = cars);
+        this.bomService.getCars().subscribe(cars => {
+            console.log('Cars loaded:', cars);
+            if (cars.length > 0) {
+                console.log('Car 0 chassis ID structure:', JSON.stringify(cars[0].chassisAssetId));
+            }
+            this.cars = cars;
+        });
     }
 
     loadRecentComponents(): void {

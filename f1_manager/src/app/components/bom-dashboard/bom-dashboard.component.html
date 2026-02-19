@@ -14,7 +14,7 @@
             <div *ngFor="let car of cars" class="car-card">
                 <h3>{{ car.modelName }} (#{{ car.carNumber }})</h3>
                 <p><strong>Driver:</strong> {{ car.driver || 'N/A' }}</p>
-                <button [routerLink]="['/asset', car.chassisAssetId]">View Live BOM</button>
+                <button [routerLink]="['/asset', $any(car.chassisAssetId)._id]">View Live BOM</button>
             </div>
         </div>
     </section>

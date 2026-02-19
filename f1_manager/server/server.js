@@ -71,17 +71,26 @@ app.patch('/api/components/:id', async (req, res) => {
     }
 });
 
-// 5. Get asset tree (instantiated assets)
 app.get('/api/assets/:id', async (req, res) => {
     try {
         const asset = await Asset.findById(req.params.id).populate('componentId');
+        if (!asset) {
+            console.warn(`Asset not found: ${req.params.id}`);
+            return res.status(404).json({ error: 'Asset not found' });
+        }
         const children = await Asset.find({ parentAssetId: req.params.id }).populate('componentId');
+        console.log(`Asset tree loaded for ${req.params.id} (${children.length} children)`);
         res.json({ asset, children });
     } catch (err) {
+        console.error(`Asset tree failed for ${req.params.id}:`, err.message);
         res.status(500).json({ error: err.message });
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`F1 Manager API running on http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(PORT, () => {
+        console.log(`F1 Manager API running on http://localhost:${PORT}`);
+    });
+}
+
+module.exports = app;

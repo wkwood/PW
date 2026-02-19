@@ -38,6 +38,11 @@
                 <input type="number" [(ngModel)]="component.specifications.weight_g">
             </div>
         </section>
+
+        <section class="form-section" *ngIf="!component.specifications">
+            <h3>Design Specifications</h3>
+            <p class="no-data">No technical specifications defined for this assembly type.</p>
+        </section>
     </div>
 
     <!-- Sub-components Table -->

@@ -118,3 +118,9 @@ th {
     padding: 5rem;
     color: #888;
 }
+
+.no-data {
+    color: #666;
+    font-style: italic;
+    font-size: 0.9rem;
+}

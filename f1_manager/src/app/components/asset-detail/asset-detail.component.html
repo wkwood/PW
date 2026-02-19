@@ -1,0 +1,69 @@
+<div class="asset-container" *ngIf="!loading; else loadingTpl">
+    <div *ngIf="rootAsset; else notFoundTpl">
+        <header>
+            <button class="back-link" [routerLink]="['/']">← Back to Dashboard</button>
+            <h1>Live BOM: {{ getComponent(rootAsset)?.name || 'Unknown' }}</h1>
+            <div class="status-badge" [ngClass]="rootAsset.status.toLowerCase().split(' ')">{{ rootAsset.status }}</div>
+        </header>
+
+        <section class="asset-info">
+            <div class="info-card">
+                <p><strong>Part Number:</strong> {{ getComponent(rootAsset)?.partNumber || 'N/A' }}</p>
+                <p><strong>Serial Number:</strong> {{ rootAsset.serialNumber || 'N/A' }}</p>
+                <p><strong>Batch:</strong> {{ rootAsset.batchNumber || 'N/A' }}</p>
+                <p><strong>Type:</strong> {{ getComponent(rootAsset)?.type || 'N/A' }}</p>
+            </div>
+        </section>
+
+        <section class="children-section">
+            <h3>Installed Sub-Assets ({{ children.length }})</h3>
+            <div class="asset-list">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Physical SN / Batch</th>
+                            <th>Component Name</th>
+                            <th>Category</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let child of children">
+                            <td>
+                                <span class="sn">{{ child.serialNumber || child.batchNumber }}</span>
+                                <span *ngIf="child.quantity > 1" class="qty">x{{ child.quantity }}</span>
+                            </td>
+                            <td>{{ getComponent(child)?.name || 'Unknown' }}</td>
+                            <td>{{ getComponent(child)?.category || 'N/A' }}</td>
+                            <td>{{ getComponent(child)?.type || 'N/A' }}</td>
+                            <td><span class="status-dot" [ngClass]="child.status.toLowerCase().split(' ')"></span> {{
+                                child.status }}</td>
+                            <td>
+                                <button *ngIf="getComponent(child)?.type !== 'Part'"
+                                    [routerLink]="['/asset', child._id]">Drill Down</button>
+                                <button [routerLink]="['/component', getComponent(child)?._id]">View Blueprint</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+
+<ng-template #loadingTpl>
+    <div class="status-screen">
+        <div class="loader"></div>
+        <p>Scanning car hierarchy...</p>
+    </div>
+</ng-template>
+
+<ng-template #notFoundTpl>
+    <div class="status-screen error">
+        <h2>Asset Not Found</h2>
+        <p>The requested physical instance could not be located in the current BOM.</p>
+        <button class="back-link" [routerLink]="['/']">Return to Dashboard</button>
+    </div>
+</ng-template>
