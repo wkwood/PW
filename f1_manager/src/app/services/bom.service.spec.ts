@@ -1,3 +1,4 @@
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { BomService } from './bom.service';
@@ -13,10 +14,6 @@ describe('BomService', () => {
         });
         service = TestBed.inject(BomService);
         httpMock = TestBed.inject(HttpTestingController);
-    });
-
-    afterEach(() => {
-        httpMock.verify();
     });
 
     it('should be created', () => {

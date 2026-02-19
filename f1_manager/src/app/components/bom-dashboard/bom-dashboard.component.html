@@ -37,7 +37,7 @@
                     <tr *ngFor="let comp of components">
                         <td>{{ comp.partNumber }}</td>
                         <td>{{ comp.name }}</td>
-                        <td><span class="badge" [ngClass]="comp.type.toLowerCase()">{{ comp.type }}</span></td>
+                        <td><span class="badge" [ngClass]="comp.type?.toLowerCase() || ''">{{ comp.type }}</span></td>
                         <td>{{ comp.category }}</td>
                         <td>{{ comp.serialNumber || 'N/A' }}</td>
                         <td>

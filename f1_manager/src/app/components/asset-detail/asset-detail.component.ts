@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { BomService } from '../../services/bom.service';
 import { Asset, Component as F1Component } from '../../models/f1-bom.model';
+import { SafeStatusPipe } from '../../pipes/safe-status.pipe';
 
 @Component({
     selector: 'app-asset-detail',
     standalone: true,
-    imports: [CommonModule, RouterModule],
+    imports: [CommonModule, RouterModule, SafeStatusPipe],
     templateUrl: './asset-detail.component.html',
     styleUrls: ['./asset-detail.component.css']
 })

@@ -3,7 +3,9 @@
         <header>
             <button class="back-link" [routerLink]="['/']">← Back to Dashboard</button>
             <h1>Live BOM: {{ getComponent(rootAsset)?.name || 'Unknown' }}</h1>
-            <div class="status-badge" [ngClass]="rootAsset.status.toLowerCase().split(' ')">{{ rootAsset.status }}</div>
+            <div class="status-badge" *ngIf="rootAsset.status" [ngClass]="(rootAsset.status | safeStatus)">
+                {{ rootAsset.status }}
+            </div>
         </header>
 
         <section class="asset-info">
@@ -38,12 +40,12 @@
                             <td>{{ getComponent(child)?.name || 'Unknown' }}</td>
                             <td>{{ getComponent(child)?.category || 'N/A' }}</td>
                             <td>{{ getComponent(child)?.type || 'N/A' }}</td>
-                            <td><span class="status-dot" [ngClass]="child.status.toLowerCase().split(' ')"></span> {{
+                            <td><span class="status-dot" [ngClass]="(child.status | safeStatus) || []"></span> {{
                                 child.status }}</td>
                             <td>
-                                <button *ngIf="getComponent(child)?.type !== 'Part'"
+                                <button *ngIf="getComponent(child).type !== 'Part'"
                                     [routerLink]="['/asset', child._id]">Drill Down</button>
-                                <button [routerLink]="['/component', getComponent(child)?._id]">View Blueprint</button>
+                                <button [routerLink]="['/component', getComponent(child)._id]">View Blueprint</button>
                             </td>
                         </tr>
                     </tbody>
