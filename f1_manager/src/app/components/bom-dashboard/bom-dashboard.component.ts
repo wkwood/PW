@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { BomService } from '../../services/bom.service';
 import { Car, Component as F1Component } from '../../models/f1-bom.model';
@@ -17,7 +17,10 @@ export class BomDashboardComponent implements OnInit {
     components: F1Component[] = [];
     searchQuery: string = '';
 
-    constructor(private bomService: BomService) { }
+    constructor(
+        private bomService: BomService,
+        private router: Router
+    ) { }
 
     ngOnInit(): void {
         this.loadCars();
@@ -29,7 +32,20 @@ export class BomDashboardComponent implements OnInit {
     }
 
     loadRecentComponents(): void {
-        this.bomService.getComponents().subscribe(comps => this.components = comps);
+        this.bomService.getComponents().subscribe(comps => {
+            console.log('Recent components loaded:', comps.length);
+            if (comps.length > 0) {
+                console.log('First component ID sample:', comps[0]._id);
+            }
+            this.components = comps;
+        });
+    }
+
+    editComponent(id: string | undefined): void {
+        console.log('Navigating to component edit:', id);
+        if (id) {
+            this.router.navigate(['/component', id]);
+        }
     }
 
     onSearch(): void {

@@ -41,7 +41,7 @@
                         <td>{{ comp.category }}</td>
                         <td>{{ comp.serialNumber || 'N/A' }}</td>
                         <td>
-                            <button [routerLink]="['/component', comp._id]">Edit Blueprint</button>
+                            <button (click)="editComponent(comp._id)">Edit Blueprint</button>
                         </td>
                     </tr>
                 </tbody>

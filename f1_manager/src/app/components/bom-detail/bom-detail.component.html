@@ -54,8 +54,8 @@
             </thead>
             <tbody>
                 <tr *ngFor="let sub of component.subComponents">
-                    <td>{{ $any(sub.componentId).partNumber }}</td>
-                    <td>{{ $any(sub.componentId).name }}</td>
+                    <td>{{ $any(sub.componentId)?.partNumber || 'N/A' }}</td>
+                    <td>{{ $any(sub.componentId)?.name || 'Unknown Component' }}</td>
                     <td>{{ sub.quantity }}</td>
                     <td>{{ sub.serialNumber || 'Any' }}</td>
                 </tr>

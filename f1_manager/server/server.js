@@ -13,6 +13,12 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+// Request Logger
+app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+    next();
+});
+
 // MongoDB Connection
 mongoose.connect('mongodb://localhost:27017/F1')
     .then(() => console.log('Connected to MongoDB (F1 Database)'))
@@ -57,8 +63,10 @@ app.get('/api/components', async (req, res) => {
 app.patch('/api/components/:id', async (req, res) => {
     try {
         const updated = await Component.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        console.log(`Successfully updated component ${req.params.id}`);
         res.json(updated);
     } catch (err) {
+        console.error(`Update failed for ${req.params.id}:`, err.message);
         res.status(400).json({ error: err.message });
     }
 });
