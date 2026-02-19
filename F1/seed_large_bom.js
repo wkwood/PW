@@ -114,7 +114,7 @@ async function seedLargeBOM() {
     console.log("Major Systems created.");
 
     // 4. Create the Root Chassis & Car
-    const allSystemIds = await Component.find({ type: "System" }).select('_id');
+    const allSystemIds = await Component.find({ type: "System" }).select('_id subComponents');
     const chassisComp = await Component.create({
         partNumber: "CH-2026-X1",
         name: "Formula 1 Chassis Root",
@@ -123,7 +123,7 @@ async function seedLargeBOM() {
         subComponents: allSystemIds.map(s => ({ componentId: s._id, quantity: 1 }))
     });
 
-    const carAsset = await Asset.create({
+    const rootAssetInDB = await Asset.create({
         serialNumber: "SN-F1-2026-001",
         componentId: chassisComp._id,
         status: "In Use"
@@ -133,10 +133,73 @@ async function seedLargeBOM() {
         modelName: "RB22",
         carNumber: 1,
         driver: "Max Verstappen",
-        chassisAssetId: carAsset._id
+        chassisAssetId: rootAssetInDB._id
     });
 
-    console.log("\nSeeding complete! Root Car #1 is linked to 30,000+ parts via nested systems.");
+    // 5. Instantiate Assets (Target: 10,000)
+    console.log("Instantiating 10,000 physical assets...");
+    let assetsCreated = 1; // Starting with Chassis root
+    const ASSET_TARGET = 10000;
+
+    // We'll use a queue to BFS through the hierarchy and create assets
+    let queue = [{ componentId: chassisComp._id, parentAssetId: rootAssetInDB._id }];
+
+    while (queue.length > 0 && assetsCreated < ASSET_TARGET) {
+        let current = queue.shift();
+        let comp = await Component.findById(current.componentId).select('subComponents type');
+
+        if (!comp || !comp.subComponents || comp.subComponents.length === 0) continue;
+
+        let assetBatch = [];
+        for (let sub of comp.subComponents) {
+            if (assetsCreated >= ASSET_TARGET) break;
+
+            const subComp = await Component.findById(sub.componentId).select('_id type isStandardPart name partNumber');
+            if (!subComp) continue;
+
+            const isStandard = subComp.isStandardPart;
+            const assetData = {
+                componentId: subComp._id,
+                status: "In Use",
+                parentAssetId: current.parentAssetId,
+                rootAssetId: rootAssetInDB._id,
+                quantity: isStandard ? sub.quantity : 1
+            };
+
+            if (isStandard) {
+                assetData.batchNumber = `BATCH-${Math.floor(Math.random() * 100000)}`;
+            } else {
+                // Ensure globally unique serial number by combining part number, count, and random tag
+                assetData.serialNumber = `SN-${subComp.partNumber}-${assetsCreated}-${Math.floor(Math.random() * 1000)}`;
+            }
+
+            assetBatch.push(assetData);
+            assetsCreated++;
+        }
+
+        if (assetBatch.length > 0) {
+            try {
+                const insertedAssets = await Asset.insertMany(assetBatch);
+
+                // Re-add assemblies/systems to queue to process their children
+                for (let i = 0; i < insertedAssets.length; i++) {
+                    const subCompRef = await Component.findById(insertedAssets[i].componentId).select('type');
+                    if (subCompRef && subCompRef.type !== "Part") {
+                        queue.push({ componentId: insertedAssets[i].componentId, parentAssetId: insertedAssets[i]._id });
+                    }
+                }
+                process.stdout.write(`\rCreated ${assetsCreated} assets...`);
+            } catch (err) {
+                console.error("\nBatch insertion failed:", err.message);
+                if (err.writeErrors) {
+                    console.error("First Write Error:", err.writeErrors[0].errmsg);
+                }
+                process.exit(1);
+            }
+        }
+    }
+
+    console.log(`\nSeeding complete! Root Car #1 has ${assetsCreated} physical assets instantiated.`);
     process.exit(0);
 }
 

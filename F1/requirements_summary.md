@@ -28,6 +28,8 @@ To prevent database bloat, the system handles "Common Parts" (e.g., bolts, washe
 
 ## 5. Performance & Indexing at Scale
 Designed to handle **30,000+ parts** per car:
+- **Component Blueprint Scale**: 30,000 unique part definitions.
+- **Asset Instantiation Scale**: Supports 10,000+ concurrent physical asset records for a single car.
 - **Root Indexing**: Every asset stores a `rootAssetId` (the Chassis), allowing a single query to retrieve every part on a car without recursive CPU-intensive lookups.
 - **Sparse Unique Indexes**: Ensures global uniqueness for serial numbers while allowing them to be optional for bulk hardware.
 
